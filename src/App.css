@@ -31,7 +31,27 @@ h3 {
 	transform: translateX(-50%);
 	margin-top: 5px;
   border-radius: 10px;
-  box-shadow: 0px 2px 2px 1px rgba(0, 0, 0, 0.1);
+  box-shadow: 0px 1px 2px 1px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+}
+
+.forecast {
+  text-align: left;
+  position: absolute;
+  top: 60px;
+  z-index: 10;
+  padding: 7px;
+  background-color: white;
+  font-weight: 500;
+  left:50%;
+  transform: translateX(-50%);
+  border-radius: 5px;
+  box-shadow: 0px 1px 2px 1px rgba(0, 0, 0, 0.1);
+}
+
+.forecast-section-item {
+  cursor: pointer;
+  color: blue;
 }
 
 .hint {

@@ -141,9 +141,36 @@ const renderCircles = (map, data) => {
 	})
 }
 
+const renderForcastCoordinates = (type, data) => {
+	if (!data.length) return
+
+	return (
+		<div className='forecast-section'>
+			{type}:
+			{data.map((coord) => {
+				return (
+					<span
+						className='forecast-section-item'
+						onClick={() => {
+							window.myMap.setCenter(coord, 8.5, {
+								duration: 200,
+							})
+						}}
+					>
+						{' '}
+						[{Math.floor(coord[0] * 10) / 10},{' '}
+						{Math.floor(coord[1] * 10) / 10}]{' '}
+					</span>
+				)
+			})}
+		</div>
+	)
+}
+
 function App() {
 	const [isShowLegend, setIsShowLegend] = useState(false)
 	const [isShowMockData, setIsShowMockData] = useState(undefined)
+	const [isShowForecastTable, setIsShowForecastTable] = useState(false)
 
 	useEffect(() => {
 		ymaps.ready(init)
@@ -158,15 +185,16 @@ function App() {
 		}
 	}, [])
 
+	const data = isShowMockData ? mockData : realData
+
 	useEffect(() => {
 		if (isShowMockData === undefined) return
 
 		for (const circle of circlesSet) window.myMap.geoObjects.remove(circle)
 		circlesSet.clear()
 
-		renderCircles(window.myMap, isShowMockData ? mockData : realData)
-	}, [isShowMockData])
-
+		renderCircles(window.myMap, data)
+	}, [isShowMockData, data])
 	return (
 		<div className='App'>
 			<div
@@ -177,11 +205,21 @@ function App() {
 					? 'Переключиться на realtime данные'
 					: 'Переключиться на данные-загушку'}
 			</div>
-			<div className='title'>
+			<div
+				className='title'
+				onClick={() => setIsShowForecastTable((prev) => !prev)}
+			>
 				{isShowMockData
 					? 'Пример, использующий данные-заглушку'
 					: 'Мониторинг потенциальных опасных погодных условий в реальном времени'}
 			</div>
+			{isShowForecastTable && (
+				<div className='forecast'>
+					{renderForcastCoordinates('шторм', data.storm)}
+					{renderForcastCoordinates('туман', data.fog)}
+					{renderForcastCoordinates('град', data.hail)}
+				</div>
+			)}
 			<div className='hint'>
 				<div
 					className='hint-title'
